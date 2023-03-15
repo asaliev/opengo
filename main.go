@@ -2,16 +2,14 @@ package main
 
 import (
 	"bufio"
-	"context"
 	"flag"
 	"fmt"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/asaliev/opengo/config"
+	"github.com/asaliev/opengo/openai"
 	"github.com/briandowns/spinner"
-	openai "github.com/sashabaranov/go-openai"
 )
 
 const apiKeyName string = "OPENAI_TOKEN"
@@ -44,34 +42,12 @@ func main() {
 	// Contact OpenAI
 	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	s.Start()
-	response, err := queryOpenAi(openaiQueryPtr)
+	openai := openai.NewOpenaiProvider(apiKeyName)
+	response, err := openai.Ask(openaiQueryPtr)
 	if err != nil {
 		fmt.Printf("\n%s\n", err.Error())
 		os.Exit(1)
 	}
 	s.Stop()
 	fmt.Println(response)
-}
-
-func queryOpenAi(question *string) (string, error) {
-	config := config.NewConfigProvider()
-	client := openai.NewClient(config.ReadString(apiKeyName))
-	resp, err := client.CreateChatCompletion(
-		context.Background(),
-		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
-			Messages: []openai.ChatCompletionMessage{
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: *question,
-				},
-			},
-		},
-	)
-
-	if err != nil {
-		return "", err
-	}
-
-	return resp.Choices[0].Message.Content, nil
 }
