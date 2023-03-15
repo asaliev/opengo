@@ -24,7 +24,7 @@ func main() {
 		for input.Scan() {
 			if input.Text() == "exit" {
 				fmt.Println("Goodbye...")
-				break
+				os.Exit(0)
 			}
 			if input.Text() == "" {
 				continue
@@ -32,11 +32,6 @@ func main() {
 			*openaiQueryPtr = input.Text()
 			break
 		}
-	}
-
-	// If we don't have a query at this stage we should just exit
-	if *openaiQueryPtr == "" {
-		os.Exit(0)
 	}
 
 	// Contact OpenAI
