@@ -52,4 +52,4 @@ todo
 
 ## License
 
-This project is licensed under the MIT license. See LICENSE.md for more details.
+This project is licensed under the MIT license. See LICENSE for more details.
