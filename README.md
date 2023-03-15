@@ -1,14 +1,14 @@
 # opengo: ChatGPT command line client
 
-A minimalistic ChatGPT client written in Go.
+A minimalistic ChatGPT client written in Go for personal use.
 
 ## Configuration
 
-There is only one required configuration parameter: `OPENAI_TOKEN`.
+There is only one required configuration parameter which is the OpenAI API token.
+
+You can get your token via the [OpenAI account settings](https://platform.openai.com/account/api-keys) page.
 
 ### Environment variables
-
-You can set the token using an environment variable.
 
 #### Linux/OSX
 
@@ -27,7 +27,7 @@ set OPENGO_OPENAI_TOKEN=my_token
 With bash-like shells you can prefix the token when running the executable:
 
 ```bash
-$ OPENGO_OPENAI_TOKEN=my_token ./opengo -q "Hello!"
+OPENGO_OPENAI_TOKEN=my_token ./opengo -q "Hello!"
 ```
 
 ### YAML Config
@@ -39,6 +39,12 @@ OPENAI_TOKEN: "my_token"
 ``` 
 
 ## Running
+
+```bash
+./opengo -q "To be or not to be?"
+```
+
+## Building
 
 todo
 
