@@ -3,7 +3,7 @@
 A minimalistic ChatGPT client written in Go.
 
 ## Configuration
-  
+
 There is only one required configuration parameter: `OPENAI_TOKEN`.
 
 ### Environment variables
