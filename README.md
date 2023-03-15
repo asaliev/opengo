@@ -38,6 +38,8 @@ Alternatively you can create a config file `chatgpt.yaml` in the same directory 
 OPENAI_TOKEN: "my_token"
 ``` 
 
+Note, the environment variable takes precedence over the YAML config.
+
 ## Running
 
 ```bash
