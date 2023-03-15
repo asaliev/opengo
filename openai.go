@@ -15,14 +15,23 @@ import (
 	openai "github.com/sashabaranov/go-openai"
 )
 
-func getEnvVar(key string) string {
-	err := godotenv.Load(".env")
+var openAiToken string
 
-	if err != nil {
-		log.Fatalf("Error loading .env file")
+func init() {
+	openAiToken = getEnvVar("OPENAI_TOKEN")
+}
+
+func getEnvVar(key string) string {
+	token := os.Getenv(key)
+	if token == "" {
+		err := godotenv.Load(".env")
+		if err != nil {
+			log.Fatalf("Error loading .env file")
+		}
+		token = os.Getenv(key)
 	}
 
-	return os.Getenv(key)
+	return token
 }
 
 func main() {
@@ -51,20 +60,19 @@ func main() {
 	}
 
 	// Contact OpenAI
+	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
+	s.Start()
 	response, err := queryOpenAi(openaiQueryPtr)
 	if err != nil {
-		fmt.Printf("Looks like there was an error: %s\n", err.Error())
+		fmt.Printf("\n%s\n", err.Error())
 		os.Exit(1)
 	}
-
+	s.Stop()
 	fmt.Println(response)
 }
 
 func queryOpenAi(question *string) (string, error) {
-	token := getEnvVar("OPENAI_TOKEN")
-	client := openai.NewClient(token)
-	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
-	s.Start()
+	client := openai.NewClient(openAiToken)
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
@@ -77,9 +85,9 @@ func queryOpenAi(question *string) (string, error) {
 			},
 		},
 	)
-	s.Stop()
+
 	if err != nil {
-		return "", fmt.Errorf("OpenAI error: %v", err)
+		return "", err
 	}
 
 	return resp.Choices[0].Message.Content, nil
