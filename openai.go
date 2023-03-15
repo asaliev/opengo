@@ -5,34 +5,16 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/asaliev/opengo/config"
 	"github.com/briandowns/spinner"
-	"github.com/joho/godotenv"
 	openai "github.com/sashabaranov/go-openai"
 )
 
-var openAiToken string
-
-func init() {
-	openAiToken = getEnvVar("OPENAI_TOKEN")
-}
-
-func getEnvVar(key string) string {
-	token := os.Getenv(key)
-	if token == "" {
-		err := godotenv.Load(".env")
-		if err != nil {
-			log.Fatalf("Error loading .env file")
-		}
-		token = os.Getenv(key)
-	}
-
-	return token
-}
+const apiKeyName string = "OPENAI_TOKEN"
 
 func main() {
 	// Get the users query via args or stdin
@@ -72,7 +54,8 @@ func main() {
 }
 
 func queryOpenAi(question *string) (string, error) {
-	client := openai.NewClient(openAiToken)
+	config := config.NewConfigProvider()
+	client := openai.NewClient(config.ReadString(apiKeyName))
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
