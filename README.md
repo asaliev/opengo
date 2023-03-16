@@ -48,10 +48,20 @@ go build
 
 ## Run
 
+### Standard input mode
+
 ```bash
 ./opengo -q "To be or not to be?"
 ```
 
+### Interactive mode
+
+```bash
+$ ./opengo
+Query (`exit` to quit):
+to be or not to be?
+...
+```
 
 ## Test
 
