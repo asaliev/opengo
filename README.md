@@ -1,6 +1,6 @@
 # opengo: ChatGPT command line client
 
-A minimalistic ChatGPT client written in Go for personal use.
+A minimalistic ChatGPT client written in Go for personal use. Uses the `gpt-3.5-turbo` model.
 
 ## Configuration
 
