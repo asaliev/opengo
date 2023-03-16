@@ -13,7 +13,7 @@ type openaiProvider struct {
 }
 
 // How many context messages to send to ChatGPT
-const contextNumberOfMessages int = 5
+const contextNumberOfMessages int = 10
 
 func NewOpenaiProvider(apiKeyName string) *openaiProvider {
 	config := config.NewConfigProvider()
@@ -35,6 +35,7 @@ func (p *openaiProvider) Ask(question string) (string, error) {
 		Content: question,
 	})
 
+	// Probably need to look into garbage collection in the code below at some point
 	length := len(p.messages)
 	cut := contextNumberOfMessages
 	if length < contextNumberOfMessages {
