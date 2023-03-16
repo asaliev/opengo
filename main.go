@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -33,8 +34,23 @@ func main() {
 			fmt.Println("Query (`exit` to quit):")
 		}
 
-		input := getUserInput()
-		if isExitCommand(input) {
+		query := ""
+		if isFlagSet("q") {
+			queryFromArgs, err := getUserQueryFromArgs()
+			if err != nil {
+				panic(err.Error())
+			}
+			query = queryFromArgs
+		} else {
+			scanner := bufio.NewScanner(os.Stdin)
+			query = getUserInput(scanner)
+			if isExitCommand(query) {
+				fmt.Println(goodbyeMessage)
+				os.Exit(1)
+			}
+		}
+
+		if isExitCommand(query) {
 			fmt.Println(goodbyeMessage)
 			os.Exit(1)
 		}
@@ -45,7 +61,7 @@ func main() {
 		}
 
 		// Contact OpenAI
-		response, err := openai.Ask(input)
+		response, err := openai.Ask(query)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -68,21 +84,20 @@ func isExitCommand(input string) bool {
 	return input == exitCommand
 }
 
-func getUserInput() string {
-	if isFlagSet("q") {
-		if *queryPtr == "" {
-			panic("Error: empty query parameter")
-		}
-		return *queryPtr
+func getUserQueryFromArgs() (string, error) {
+	if *queryPtr == "" {
+		return "", errors.New("empty -q parameter")
 	}
+	return *queryPtr, nil
+}
 
-	input := bufio.NewScanner(os.Stdin)
-
+func getUserInput(input *bufio.Scanner) string {
 	for input.Scan() {
 		if input.Text() != "" {
 			break
 		}
 	}
+
 	return input.Text()
 }
 
