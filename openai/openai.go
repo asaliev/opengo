@@ -14,13 +14,12 @@ type openaiProvider struct {
 func NewOpenaiProvider(apiKeyName string) *openaiProvider {
 	config := config.NewConfigProvider()
 	client := openai.NewClient(config.ReadString(apiKeyName))
-
 	return &openaiProvider{
 		client: client,
 	}
 }
 
-func (p *openaiProvider) Ask(question *string) (string, error) {
+func (p *openaiProvider) Ask(question string) (string, error) {
 	resp, err := p.client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
@@ -28,7 +27,7 @@ func (p *openaiProvider) Ask(question *string) (string, error) {
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleUser,
-					Content: *question,
+					Content: question,
 				},
 			},
 		},

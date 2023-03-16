@@ -5,55 +5,85 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/asaliev/opengo/openai"
 	"github.com/briandowns/spinner"
 )
 
-const apiKeyName string = "OPENAI_TOKEN"
+const (
+	apiKeyName     string = "OPENAI_TOKEN"
+	exitCommand    string = "exit"
+	promptMessage  string = "Query (exit to quit): "
+	goodbyeMessage string = "Goodbye..."
+)
+
+var queryPtr = flag.String("q", "", "Query sent to OpenAI")
 
 func main() {
-	// Get the users query via args or stdin
-	openaiQueryPtr := flag.String("q", "", "Query sent to OpenAI")
 	flag.Parse()
-	if len(strings.TrimSpace(*openaiQueryPtr)) == 0 {
-		fmt.Println("Please input a query for OpenAI or type `exit` to quit:")
-		input := bufio.NewScanner(os.Stdin)
-		for input.Scan() {
-			if input.Text() == "exit" {
-				fmt.Println("Goodbye...")
-				os.Exit(0)
-			}
-			if input.Text() == "" {
-				continue
-			}
-			*openaiQueryPtr = input.Text()
+	openai := openai.NewOpenaiProvider(apiKeyName)
+	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
+
+	// Get user input
+	exit := false
+
+	for !exit {
+		if !isFlagSet("q") {
+			fmt.Println("Query (`exit` to quit):")
+		}
+
+		input := getUserInput()
+		if isExitCommand(input) {
+			fmt.Println(goodbyeMessage)
+			os.Exit(1)
+		}
+
+		// Show the spinner only in interactive mode
+		if !isFlagSet("q") {
+			s.Start()
+		}
+
+		// Contact OpenAI
+		response, err := openai.Ask(input)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		// Hide the spinner only in interactive mode
+		if !isFlagSet("q") {
+			s.Stop()
+		}
+
+		fmt.Println(response)
+
+		// Exit when in non-interactive mode
+		if isFlagSet("q") {
 			break
 		}
 	}
+}
 
-	// Show the spinner only in interactive mode
-	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
-	if !isFlagSet("q") {
-		s.Start()
+func isExitCommand(input string) bool {
+	return input == exitCommand
+}
+
+func getUserInput() string {
+	if isFlagSet("q") {
+		if *queryPtr == "" {
+			panic("Error: empty query parameter")
+		}
+		return *queryPtr
 	}
 
-	// Contact OpenAI
-	openai := openai.NewOpenaiProvider(apiKeyName)
-	response, err := openai.Ask(openaiQueryPtr)
-	if err != nil {
-		fmt.Printf("\n%s\n", err.Error())
-		os.Exit(1)
-	}
+	input := bufio.NewScanner(os.Stdin)
 
-	// Hide the spinner only in interactive mode
-	if !isFlagSet("q") {
-		s.Stop()
+	for input.Scan() {
+		if input.Text() != "" {
+			break
+		}
 	}
-
-	fmt.Println(response)
+	return input.Text()
 }
 
 func isFlagSet(name string) bool {
