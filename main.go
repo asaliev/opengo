@@ -34,15 +34,34 @@ func main() {
 		}
 	}
 
-	// Contact OpenAI
+	// Show the spinner only in interactive mode
 	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
-	s.Start()
+	if !isFlagSet("q") {
+		s.Start()
+	}
+
+	// Contact OpenAI
 	openai := openai.NewOpenaiProvider(apiKeyName)
 	response, err := openai.Ask(openaiQueryPtr)
 	if err != nil {
 		fmt.Printf("\n%s\n", err.Error())
 		os.Exit(1)
 	}
-	s.Stop()
+
+	// Hide the spinner only in interactive mode
+	if !isFlagSet("q") {
+		s.Stop()
+	}
+
 	fmt.Println(response)
+}
+
+func isFlagSet(name string) bool {
+	found := false
+	flag.Visit(func(f *flag.Flag) {
+		if f.Name == name {
+			found = true
+		}
+	})
+	return found
 }
