@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/viper"
 )
@@ -32,8 +31,7 @@ func NewConfigProvider() *configProvider {
 func (p *configProvider) ReadString(key string) string {
 	value, ok := viper.Get(key).(string)
 	if !ok {
-		fmt.Printf("\nError while reader config key `%s`.\n", key)
-		os.Exit(1)
+		panic(fmt.Sprintf("Error while reader config key `%s`.\n", key))
 	}
 
 	return value
