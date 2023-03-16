@@ -51,6 +51,9 @@ func (p *openaiProvider) Ask(question string) (string, error) {
 	)
 
 	if err != nil {
+		// Remove the last question from context since there was an error
+		p.messages = p.messages[:len(p.messages)-1]
+
 		return "", err
 	}
 
