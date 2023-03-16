@@ -30,10 +30,6 @@ func main() {
 	exit := false
 
 	for !exit {
-		if !isFlagSet("q") {
-			fmt.Println("Query (`exit` to quit):")
-		}
-
 		query := ""
 		if isFlagSet("q") {
 			queryFromArgs, err := getUserQueryFromArgs()
@@ -42,6 +38,7 @@ func main() {
 			}
 			query = queryFromArgs
 		} else {
+			fmt.Println("Query (`exit` to quit):")
 			scanner := bufio.NewScanner(os.Stdin)
 			query = getUserInput(scanner)
 			if isExitCommand(query) {
