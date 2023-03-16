@@ -40,15 +40,24 @@ OPENAI_TOKEN: "my_token"
 
 Note, the environment variable takes precedence over the YAML config.
 
+## Building
+
+```bash
+go build
+```
+
 ## Running
 
 ```bash
 ./opengo -q "To be or not to be?"
 ```
 
-## Building
 
-todo
+## Testing
+
+```bash
+go test . ./config
+```
 
 ## License
 
