@@ -63,7 +63,13 @@ func main() {
 		// Contact OpenAI
 		response, err := openai.Ask(query)
 		if err != nil {
-			panic(err.Error())
+			if isFlagSet("q") {
+				panic(err.Error())
+			} else {
+				s.Stop()
+				fmt.Printf("ChatGPT error: %s", err.Error())
+				continue
+			}
 		}
 
 		// Hide the spinner only in interactive mode
