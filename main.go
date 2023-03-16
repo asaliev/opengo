@@ -27,9 +27,7 @@ func main() {
 	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 
 	// Get user input
-	exit := false
-
-	for !exit {
+	for {
 		query := ""
 		if isFlagSet("q") {
 			queryFromArgs, err := getUserQueryFromArgs()
@@ -43,7 +41,7 @@ func main() {
 			query = getUserInput(scanner)
 			if isExitCommand(query) {
 				fmt.Println(goodbyeMessage)
-				os.Exit(1)
+				break
 			}
 		}
 
