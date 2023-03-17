@@ -45,11 +45,6 @@ func main() {
 			}
 		}
 
-		if isExitCommand(query) {
-			fmt.Println(goodbyeMessage)
-			os.Exit(1)
-		}
-
 		// Show the spinner only in interactive mode
 		if !isFlagSet("q") {
 			s.Start()
