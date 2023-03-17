@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/asaliev/opengo/openai"
@@ -50,7 +51,9 @@ func (c *InteractiveCommand) Run(openai openai.OpenaiApi) {
 			continue
 		}
 
+		fmt.Println(strings.Repeat("-", 70))
 		fmt.Println(response)
+		fmt.Println(strings.Repeat("-", 70))
 	}
 }
 
