@@ -3,15 +3,15 @@ package command
 import "github.com/asaliev/opengo/openai"
 
 type Command interface {
-	Run(openai.OpenaiProvider)
+	Run(openai.OpenaiApi)
 }
 
 type CommandService struct {
 	command Command
-	openai  openai.OpenaiProvider
+	openai  openai.OpenaiApi
 }
 
-func NewCommandService(c Command, o openai.OpenaiProvider) *CommandService {
+func NewCommandService(c Command, o openai.OpenaiApi) *CommandService {
 	return &CommandService{
 		command: c,
 		openai:  o,

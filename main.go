@@ -26,8 +26,8 @@ func main() {
 		provider = command.NewSimpleCommand(queryPtr)
 	}
 
-	openai := openai.NewOpenaiProvider(apiKeyName)
-	service := command.NewCommandService(provider, *openai)
+	openai := openai.NewOpenaiChatgptProvider(apiKeyName)
+	service := command.NewCommandService(provider, openai)
 	service.Execute()
 }
 

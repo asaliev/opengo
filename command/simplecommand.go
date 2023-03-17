@@ -17,7 +17,7 @@ func NewSimpleCommand(query *string) *SimpleCommand {
 	}
 }
 
-func (p *SimpleCommand) Run(openai openai.OpenaiProvider) {
+func (p *SimpleCommand) Run(openai openai.OpenaiApi) {
 	err := p.validateQuery()
 	if err != nil {
 		panic(err.Error())

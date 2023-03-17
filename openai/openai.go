@@ -7,7 +7,11 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-type OpenaiProvider struct {
+type OpenaiApi interface {
+	Ask(question string) (string, error)
+}
+
+type OpenaiChatgptProvider struct {
 	client   *openai.Client
 	messages []openai.ChatCompletionMessage
 }
@@ -15,10 +19,10 @@ type OpenaiProvider struct {
 // How many context messages to send to ChatGPT
 const contextNumberOfMessages int = 10
 
-func NewOpenaiProvider(apiKeyName string) *OpenaiProvider {
+func NewOpenaiChatgptProvider(apiKeyName string) *OpenaiChatgptProvider {
 	config := config.NewConfigProvider()
 	client := openai.NewClient(config.ReadString(apiKeyName))
-	return &OpenaiProvider{
+	return &OpenaiChatgptProvider{
 		client: client,
 		messages: []openai.ChatCompletionMessage{
 			{
@@ -29,7 +33,7 @@ func NewOpenaiProvider(apiKeyName string) *OpenaiProvider {
 	}
 }
 
-func (p *OpenaiProvider) Ask(question string) (string, error) {
+func (p *OpenaiChatgptProvider) Ask(question string) (string, error) {
 	p.messages = append(p.messages, openai.ChatCompletionMessage{
 		Role:    openai.ChatMessageRoleUser,
 		Content: question,

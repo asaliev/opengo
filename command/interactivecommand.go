@@ -26,7 +26,7 @@ func NewInteractiveCommand(scanner *bufio.Scanner) *InteractiveCommand {
 	}
 }
 
-func (c *InteractiveCommand) Run(openai openai.OpenaiProvider) {
+func (c *InteractiveCommand) Run(openai openai.OpenaiApi) {
 	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 
 	for {
