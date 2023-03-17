@@ -18,7 +18,7 @@ func main() {
 
 	var provider command.Command = nil
 	switch isFlagSet("q") {
-	case true:
+	case false:
 		scanner := bufio.NewScanner(os.Stdin)
 		provider = command.NewInteractiveCommand(scanner)
 
