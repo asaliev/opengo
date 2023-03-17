@@ -66,7 +66,7 @@ to be or not to be?
 ## Test
 
 ```bash
-go test . ./config ./command
+go test -v ./...
 ```
 
 ## License
